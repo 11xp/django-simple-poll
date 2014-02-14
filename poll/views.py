@@ -29,12 +29,14 @@ def vote(request, poll_pk):
         else:
             user = None
         
-        vote = Vote.objects.create(
-            poll=poll,
-            ip=request.META['REMOTE_ADDR'],
-            user=user,
-            item=item,
-        )
+        if Vote.objects.filter(poll=poll, ip=request.META['REMOTE_ADDR']).count() == 0:
+
+            vote = Vote.objects.create(
+                poll=poll,
+                ip=request.META['REMOTE_ADDR'],
+                user=user,
+                item=item,
+            )
         
         response = HttpResponse(status=200)
         set_cookie(response, poll.get_cookie_name(), poll_pk)
