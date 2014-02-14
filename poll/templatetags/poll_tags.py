@@ -7,7 +7,7 @@ from poll import views
 register = template.Library()
 
 @register.simple_tag(takes_context=True)
-def poll(context):
+def poll(context, poll_id):
     request = context['request']
 
     if not poll_id:
