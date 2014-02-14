@@ -10,10 +10,17 @@ register = template.Library()
 def poll(context):
     request = context['request']
 
-    try:
-        poll = Poll.published.latest("date")
-    except:
-        return ''
+    if not poll_id:
+        try:
+            poll = Poll.published.latest("date")
+        except:
+            return ''
+
+    else:
+        try:
+            poll = Poll.objects.get(pk=int(poll_id))
+        except:
+            return ''
     
     if poll.get_cookie_name() not in request.COOKIES:
         return views.poll(context['request'], poll.id).content
