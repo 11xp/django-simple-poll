@@ -13,22 +13,22 @@ def poll(context, poll_id):
     if not poll_id:
         try:
             poll = Poll.published.latest("date")
+            poll_id = poll.pk
         except:
             return ''
 
     else:
-        try:
-            poll = Poll.objects.get(pk=int(poll_id))
-        except:
-            return ''
-    
-    if poll.get_cookie_name() not in request.COOKIES:
-        return views.poll(context['request'], poll.id).content
+        poll_id = int(poll_id)
+
+    cookie_key = 'poll_%s' % poll_id
+
+    if cookie_key not in request.COOKIES:
+        return views.poll(context['request'], poll_id).content
     else:
-        return views.result(context['request'], poll.id).content
+        return views.result(context['request'], poll_id).content
     
 @register.simple_tag                                                                                                                         
-def percentage(poll, item):
-    poll_vote_count = poll.get_vote_count()
-    if poll_vote_count > 0:
-        return float(item.get_vote_count()) / float(poll_vote_count) * 100
+def percentage(vote_count, item_vote_count):
+    vote_count = int(vote_count)
+    if vote_count > 0:
+        return float(item_vote_count) / float(vote_count) * 100
