@@ -1,5 +1,5 @@
 from django.contrib import admin
-from poll.models import *
+from poll.models import Item, Poll, Vote
 from django.utils.translation import gettext as _
 
 class PollItemInline(admin.TabularInline):
